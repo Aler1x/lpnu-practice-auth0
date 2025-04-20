@@ -7,17 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Button } from '@/components/ui/button';
 import { route } from 'ziggy-js';
 import { Earth, Users, Map, MapPinHouse } from 'lucide-vue-next';
-import { toSlug } from '@/lib/utils';
 
 const props = defineProps<{
     country: Country;
-    page: number;
+    page: number | string;
     region: string;
 }>();
 
 // Use the server-provided region or fallback to the stored one
-const currentRegion = ref(props.region || localStorage.getItem('selectedRegion') || 'all');
-const currentPage = ref(props.page || 1);
+const currentRegion = ref<string>(props.region || localStorage.getItem('selectedRegion') || 'all');
+const currentPage = ref<number>(Number(props.page) || 1);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -27,12 +26,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: props.country.name,
-        href: route('countries.show', toSlug(props.country.name)),
+        href: route('countries.show', props.country.code),
     },
 ];
 
 const processedSvg = ref<string | null>(null);
-const processSVG = (svg: string) => {
+const processSVG = () => {
     // Create a DOMParser to parse the SVG content
     const parser = new DOMParser();
     const doc = parser.parseFromString(props.country.map, 'image/svg+xml');
@@ -69,7 +68,7 @@ const processSVG = (svg: string) => {
 
 onMounted(() => {
     if (props.country.map) {
-        processSVG(props.country.map);
+        processSVG();
     } else {
         processedSvg.value = null;
     }

@@ -4,7 +4,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import type { Country } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
-import { toSlug } from '@/lib/utils';
 import { computed } from 'vue';
 
 interface CountryCardProps {
@@ -34,7 +33,7 @@ const currentRegion = computed(() => {
         <CardFooter class="flex justify-center p-4 pt-2">
             <Button variant="outline" as-child>
             <Link 
-                :href="route('countries.show', toSlug(props.country.name))"
+                :href="route('countries.show', props.country.code)"
                 :data="{
                     page: currentPage,
                     region: currentRegion

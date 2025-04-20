@@ -12,7 +12,7 @@ Route::get('countries', [CountryController::class, 'index'])
     ->middleware('auth')
     ->name('countries');
 
-Route::get('countries/{name}', [CountryController::class, 'show'])
+Route::get('countries/{code}', [CountryController::class, 'show'])
     ->middleware('auth')
     ->name('countries.show');
 

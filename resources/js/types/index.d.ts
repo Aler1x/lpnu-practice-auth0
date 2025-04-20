@@ -45,6 +45,7 @@ export interface Country {
     region: string;
     map_url: string;
     map: string;
+    code: string;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

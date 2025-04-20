@@ -34,9 +34,7 @@ class CountryController extends Controller
             self::CACHE_KEY . '.region.' . $region,
             self::CACHE_TTL,
             function () use ($region) {
-                return $this->countryService->fetchByRegion($region, [
-                    'fields' => 'name,flags,region'
-                ]);
+                return $this->countryService->fetchByRegion($region);
             }
         );
 
@@ -48,7 +46,7 @@ class CountryController extends Controller
         
         $paginatedCountries = $countries->slice($offset, self::PER_PAGE)->values();
 
-        return Inertia::render('countries/Index', [
+        return Inertia::render('countries/index', [
             'countries' => $paginatedCountries,
             'regions' => $this->countryService->getRegions(),
             'currentRegion' => $region,
@@ -61,17 +59,19 @@ class CountryController extends Controller
         ]);
     }
 
-    public function show(string $slug, Request $request): Response
+    public function show(string $code, Request $request): Response
     {
-        $name = str_replace('-', ' ', $slug);
         $page = $request->query('page', 1);
         $region = $request->query('region', 'all');
 
+        logger()->info('Showing country by code: ' . $code . ' Cache key: ' . self::CACHE_KEY . '.code.' . $code);
+
         $country = Cache::remember(
-            self::CACHE_KEY . '.name.' . $name,
+            // Use the code to cache the country
+            self::CACHE_KEY . '.code.' . $code,
             self::CACHE_TTL,
-            function () use ($name) {
-                return $this->countryService->fetchByName($name)->first();
+            function () use ($code) {
+                return $this->countryService->fetchByCode($code)->first();
             }
         );
 
@@ -86,7 +86,7 @@ class CountryController extends Controller
             $country['map'] = $mapData;
         }
 
-        return Inertia::render('countries/Show', [
+        return Inertia::render('countries/show', [
             'country' => $country,
             'page' => $page,
             'region' => $region
@@ -105,12 +105,9 @@ class CountryController extends Controller
         
         return Cache::remember($cacheKey, self::MAP_CACHE_TTL, function () use ($url) {
             try {
-                logger()->info('Fetching map data from: ' . $url);
                 $response = Http::get($url);
                 
                 if ($response->successful()) {
-                    logger()->info('Successfully fetched map data', ['url' => $url]);
-                    
                     // Get the SVG content
                     $svgContent = $response->body();
                     
