@@ -16,4 +16,4 @@ Route::get('countries/{name}', [CountryController::class, 'show'])
     ->middleware('auth')
     ->name('countries.show');
 
-require __DIR__.'/settings.php';
+// require __DIR__.'/settings.php';
