@@ -12,11 +12,6 @@ import { route } from 'ziggy-js';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
         title: 'Countries',
         href: '/countries',
         icon: Earth,
@@ -33,7 +28,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
+                        <Link :href="route('countries')">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>

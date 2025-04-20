@@ -14,7 +14,7 @@ use Inertia\{
 class CountryController extends Controller
 {
     const CACHE_KEY = 'countries';
-    const CACHE_TTL = 60;
+    const CACHE_TTL = 60 * 60 * 24; // 24 hours
     const MAP_CACHE_TTL = 1440; // 24 hours for maps
     const PER_PAGE = 24; // Number of countries per page
 
