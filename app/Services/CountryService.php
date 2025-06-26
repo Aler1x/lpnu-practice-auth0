@@ -24,6 +24,11 @@ class CountryService extends FetchService
      */
     public function fetch(array $queryParams = []): Collection
     {
+        // Add required fields parameter to avoid API error
+        $queryParams = array_merge([
+            'fields' => 'name,flags,capital,population,area,region,cca2'
+        ], $queryParams);
+        
         try {
             $response = Http::get(self::API_URL . '/all', $queryParams);
             if ($response->successful()) {
